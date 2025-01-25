@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Model;
+namespace App\Domain\Coupon;
 use App\Domain\Coupon\Event\CouponApplied;
 use App\Domain\Coupon\Event\CouponCreated;
 use App\Domain\Coupon\Event\CouponRevoked;

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service;
 
-use App\Application\Command\ApplyCoupon;
+use App\Application\Command\ApplyCouponToBasket;
 use App\Application\Command\CommandInterface;
+use App\Application\Command\CreateBasket;
 use App\Application\Command\CreateCoupon;
 use App\Application\Command\RevokeCoupon;
-use App\Application\Handler\ApplyCouponHandler;
+use App\Application\Handler\ApplyCouponToBasketHandler;
 use App\Application\Handler\CommandHandlerInterface;
+use App\Application\Handler\CreateBasketHandler;
 use App\Application\Handler\CreateCouponHandler;
 use App\Application\Handler\RevokeCouponHandler;
 use Psr\Container\ContainerInterface;
@@ -28,7 +30,8 @@ class CommandBus implements CommandBusInterface, ServiceSubscriberInterface
         return [
             CreateCoupon::class => CreateCouponHandler::class,
             RevokeCoupon::class => RevokeCouponHandler::class,
-            ApplyCoupon::class => ApplyCouponHandler::class,
+            ApplyCouponToBasket::class => ApplyCouponToBasketHandler::class,
+            CreateBasket::class => CreateBasketHandler::class,
         ];
     }
 

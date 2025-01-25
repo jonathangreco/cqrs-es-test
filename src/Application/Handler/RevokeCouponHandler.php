@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Application\Handler;
 
 use App\Application\Command\CommandInterface;
+use App\Domain\Coupon\Coupon;
 use App\Domain\Coupon\Event\CouponRevoked;
-use App\Domain\Model\Coupon;
 use App\Infrastructure\Persistence\RedisEventStore;
 
 class RevokeCouponHandler implements CommandHandlerInterface

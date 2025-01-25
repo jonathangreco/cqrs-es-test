@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UI\Cli\Command;
 
-use App\Application\Command\ApplyCoupon;
+use App\Application\Command\ApplyCouponToBasket;
 use App\Infrastructure\Persistence\RedisEventStore;
 use App\Infrastructure\Service\CommandBusInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -25,23 +25,32 @@ class ApplyCouponCommand extends Command
     {
         $this
             ->setDescription('Appliquer un coupon')
-            ->addArgument('coupon', InputArgument::REQUIRED, 'ID du coupon');
+            ->addArgument('coupon', InputArgument::REQUIRED, 'ID du coupon')
+            ->addArgument('basket', InputArgument::REQUIRED, 'ID du panier');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->redisEventStore->changePrefix('coupon:');
         $couponId = (int) $input->getArgument('coupon');
+        $couponExist = $this->redisEventStore->exists($couponId);
 
-        if (! $this->redisEventStore->exists($couponId)) {
-            $output->writeln('!!!SAVAGE REJECTION !!! le coupon existe pas');
+        $this->redisEventStore->changePrefix('basket:');
+        $basketId = (int) $input->getArgument('basket');
+        $basketExist = $this->redisEventStore->exists($basketId);
+
+
+        if (! $couponExist || ! $basketExist) {
+            $output->writeln("!!!SAVAGE REJECTION !!! le coupon/basket n'existe pas");
 
             return Command::FAILURE;
         }
 
-        $this->commandBus->handle(new ApplyCoupon($couponId));
+        $this->redisEventStore->changePrefix('basket:');
+        dump($this->redisEventStore->getEvents($basketId));
 
-        dump($this->redisEventStore->getEvents($couponId));
+        $this->commandBus->handle(new ApplyCouponToBasket($couponId, $basketId));
+
 
         return Command::SUCCESS;
     }
