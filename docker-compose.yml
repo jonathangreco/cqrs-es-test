@@ -1,0 +1,93 @@
+services:
+  redis-danim:
+    container_name: redis-danim
+    image: redis:8.0-M02-alpine
+    ports:
+      - 6379:6379
+    networks:
+      - backend-danim
+
+  traefik-danim:
+    image: traefik:v2.10
+    container_name: traefik-danim
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    command:
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_data-danim:/etc/traefik
+    networks:
+      - backend-danim
+
+  nginx-danim:
+    image: nginx:latest
+    container_name: nginx-danim
+    volumes:
+      - ./dockerfiles/api/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./:/var/www/danim:ro
+    depends_on:
+      - api-danim
+    networks:
+      - backend-danim
+    extra_hosts:
+        - "www.danim.local:127.0.0.1"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=backend"
+      - "traefik.http.routers.nginx.rule=Host(`www.danim.local`)"
+      - "traefik.http.services.nginx.loadbalancer.server.port=80"
+
+  api-danim:
+    build: dockerfiles/api
+    container_name: api-danim
+    volumes:
+      - ./dockerfiles/api/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./:/var/www/danim:rw
+    working_dir: /var/www/danim
+    networks:
+      - backend-danim
+
+  rabbitmq-danim:
+    image: rabbitmq:4.0.3-management
+    container_name: rabbitmq-danim
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: monaco
+      RABBITMQ_DEFAULT_PASS: test123
+    networks:
+      - backend-danim
+
+  ###> symfony/mailer ###
+  mailer-danim:
+    container_name: mailer-danim
+    image: axllent/mailpit
+    restart: unless-stopped
+    volumes:
+      - ./data/mailpit:/data
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - backend-danim
+  ###< symfony/mailer ###
+volumes:
+  db_data-danim:
+  traefik_data-danim:
+
+networks:
+  backend-danim:
+    external: true # docker network create backend-danim
