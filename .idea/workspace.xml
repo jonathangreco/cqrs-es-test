@@ -88,7 +88,7 @@
     "Docker.docker-compose.yml.redis-danim: Compose Deployment.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "<unknown>",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "/home/john/www/OldProject/tribes-app",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -145,7 +145,7 @@
       <option name="presentableId" value="Default" />
       <updated>1737793131738</updated>
       <workItem from="1737793135075" duration="1747000" />
-      <workItem from="1737794890685" duration="17890000" />
+      <workItem from="1737794890685" duration="18250000" />
     </task>
     <servers />
   </component>
