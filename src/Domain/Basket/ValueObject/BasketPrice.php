@@ -14,7 +14,6 @@ class BasketPrice
     {
         $object = new self();
 
-        dump($amount);
         if (! $object->isValid($amount)) {
             throw DomainLogicException::invalidBasketPrice('"!!!SAVAGE REJECTION !!! Le panier à un montant inéligible pour un coupon');
         }
