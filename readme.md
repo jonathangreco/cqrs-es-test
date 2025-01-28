@@ -14,7 +14,9 @@ Visit : http://www.danim.local/
 
 It should show the SF7 welcome page !
 
-# Explique un peu le projet et surtout tes choix
+# Le projet
+
+## Explique un peu le projet et surtout tes choix
 
 A la différence de mes idées de départ, j'ai décidé après avoir visionné les vidéos de Thomas Brouillet et Clément Helliou de partir from scratch pour mieux comprendre
 cette architecture. Ma seule expérience de l'ES et CQRS se basait sur Broadway et Prooph qui sont déjà bien magique.
@@ -36,10 +38,18 @@ Les raccourcis pris après 6-8 heures de travail :
 - Pas de projection (encore ! j'aurais aimé en faire)
 - Pas de test unitaires
 
-# Y a t'il de la dette technique ?
+## Y a t'il de la dette technique ?
 - Oui je n'ai par exemple pas nettoyé les getters / setter inutile
 - Je n'ai pas opéré de relecture complète du code pour vérifier des variables non utilisé ou autre joyeusetés.
 
+## Avantage et inconvénient de l'architecture
+- Inconvénient : je trouve l'architecture trop verbeuse et beaucoup de classe
+- Invconvénient : Il faut pouvoir mettre des gardes fou ou avoir un paradigme qui empeche certaines données d'être modifié une fois initialisées dans l'object lors des replay (rejeu)
+- Avantage : Voir les replay fonctionner et l'état actuel d'un objet (son state) est une accumulation de plusieurs événement
+- Inconvénient : en terme de PHP c'est qu'un objet peut posséder beaucoup de propriété nullable
+- Avantage : Debug sur une fonctionnalité critique incroyablement facile par le replay.
+
+Faire preuve de pragmatisme sur cette architecture me semble important, dans le sens ou elle n'est pas légitime dans toutes les couches de l'application et qu'il faut savoir la mettre que sur des fonctionnalités qui le nécéssite.
 
 # How to test the project
 
