@@ -1,9 +1,8 @@
 # Install
-``
-    make up
-    make rbash api-danim
-    composer install
-``
+- `docker network create backend-danim`
+- `make up`
+- `make rbash api-danim`
+- `composer install`
 
 update /etc/hosts on your host to add 
 ``
